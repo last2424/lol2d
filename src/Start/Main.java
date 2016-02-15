@@ -6,6 +6,7 @@ import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
 import org.lwjgl.opengl.ContextAttribs;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
@@ -22,6 +23,8 @@ public class Main {
 	public SpriteBatch batch;
 	static Camera cameran;
 	Texture texture;
+	
+	static long lastFrame;
 	public static void setCamera(Camera camera){
 		cameran = camera;
 	}
@@ -55,10 +58,12 @@ public class Main {
 			cameran.cameradraw();
 			Display.sync(FPS_CAP);
 			Display.update();
-			gl.render();
+			Time.Update();
+			gl.render(Time.getDelta());
 			KeyboardEngine.update();
 		}
 		
 		Display.destroy();
 	}
+
 }

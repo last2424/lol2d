@@ -25,19 +25,17 @@ public class GameLogic implements Game {
 	
 	Texture playerTexture;
 	EntityPlayer player;
-	
-	Vector2 velocity = new Vector2(3, 3);
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
 		Main.setCamera(new Camera(camera,new Vector2(Main.WIDTH,Main.HEIGHT)));
 		playerTexture = new Texture("player.png");
-		player = new EntityPlayer(20, 1, 0, 0, 0, 32, 64, playerTexture);
+		player = new EntityPlayer(20, 1, 0, 0, 0, 32, 64, playerTexture, new Vector2(3, 3));
 	}
 
 	@Override
-	public void render() {
-		update();
+	public void render(double d) {
+		update(d);
 		batch.setBackgroundColor(117, 187, 253);
 		batch.Clear();
 		player.render(batch);
@@ -58,7 +56,7 @@ public class GameLogic implements Game {
 			blocks.remove(index);
 		}
 	}
-	private void update() {
+	private void update(double d) {
 		boolean left = false;
 		boolean right = false;
 		boolean up = false;
@@ -73,20 +71,8 @@ public class GameLogic implements Game {
 		if(camera.y < 0 ) camera.y = 0;
 		else if(camera.y>1000-Start.HEIGHT ) camera.y = 1000-Start.HEIGHT;
 		
-		for(int i = 0; i < blocks.size(); i++){
-			if(player.x+32 >= blocks.get(i).x && player.x <= blocks.get(i).x+32 &&
-					player.y+64 >= blocks.get(i).y && player.y <= blocks.get(i).y+32 ){
-				player.onground = true;
-			}else{
-				player.onground = false;
-			}
-		}
-		
-		if(player.onground){
-			velocity.y = 0;
-		}else{
-			velocity.y = 3;
-		}
+		player.update(d);
+		player.collisionDetection(blocks, d);
 		
 		
 		if(MouseEngine.isMouseButton(0)){
@@ -123,17 +109,22 @@ public class GameLogic implements Game {
 			up = true;
 		}
 		
-		if(left){
-			player.move(Direction.LEFT, (int) velocity.x);
+		if(left) {
+			player.move(Direction.LEFT, (int) -3);
 		}
-		if(right){
-			player.move(Direction.RIGHT, (int) velocity.x);
+		if(right) {
+			player.move(Direction.RIGHT, (int) 3);
 		}
-		if(up){
-			player.move(Direction.UP, (int) velocity.y);
+		if(up) {
+			player.move(Direction.UP, (int) -3);
 		}
-		if(down){
-			player.move(Direction.DOWN, (int) velocity.y);
+		if(down) {
+			player.move(Direction.DOWN, (int) 3);
+		}
+		
+		if(!left && !right && !up && !down){
+			player.velocity.x = 0;
+			player.velocity.y = 0;
 		}
 	}
 

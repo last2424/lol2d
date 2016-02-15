@@ -2,5 +2,5 @@ package Start;
 
 public interface Game {
 	public void create();
-	public void render();
+	public void render(double delta);
 }
