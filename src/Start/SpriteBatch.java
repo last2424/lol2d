@@ -21,11 +21,11 @@ public class SpriteBatch {
 		GL11.glColor3f(R/255,G/255,B/255);
 	}
 	
-	public void drawTexture(Texture texture, int width, int height, int x, int y, float r, float g, float b) {
+	public void drawTexture(Texture texture, int width, int height, float x, float y, float r, float g, float b) {
 		Quad(texture.getTexture(), width, height, x, y, r, g, b);
 	}
 	
-	void Quad(int texture, int width, int height, int x, int y, float r, float g, float b) {
+	void Quad(int texture, int width, int height, float x, float y, float r, float g, float b) {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture);
 		setColor(r, g, b);
 		GL11.glBegin(GL11.GL_QUADS);

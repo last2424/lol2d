@@ -63,6 +63,7 @@ public class Main {
 			KeyboardEngine.update();
 		}
 		
+		Texture.DestorysTextures();
 		Display.destroy();
 	}
 

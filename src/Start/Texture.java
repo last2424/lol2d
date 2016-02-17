@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
@@ -15,19 +16,31 @@ import org.lwjgl.opengl.GL11;
 public class Texture {
 	 int texture;
 	 private static final int BYTES_PER_PIXEL = 4;
+	 private static HashMap<String, Integer> LoadedTextures  = new HashMap<String, Integer>();//Список текстур
 	 
-	    public Texture(final String path){
-	        int texture = 0;
-	        try {
-	        InputStream IS = Main.class.getResourceAsStream("../resources/"+path);
-	        ByteArrayOutputStream BAOS = new ByteArrayOutputStream();
-	        int read1 = IS.read(); while (read1 != -1) { BAOS.write(read1); read1 = IS.read(); }
-	        byte[] textureBA = BAOS.toByteArray();
-	        BAOS.close();
-	        BufferedImage textureBI = ImageIO.read(new ByteArrayInputStream(textureBA));
-	        texture = loadTexture(textureBI);
-	        } catch (IOException e) {e.printStackTrace();}    
-	        this.texture = texture;
+	 public Texture(final String path){
+	        Integer texture = LoadedTextures.get(path);//Получаем ид из списка загруженных текстур
+	    	if(texture == null){//Если ид не получена, значит текстура не была загруженна
+		        try {
+		        InputStream IS = Main.class.getResourceAsStream("../resources/"+path);
+		        ByteArrayOutputStream BAOS = new ByteArrayOutputStream();
+		        int read1 = IS.read(); while (read1 != -1) { BAOS.write(read1); read1 = IS.read(); }
+		        byte[] textureBA = BAOS.toByteArray();
+		        BAOS.close();
+		        BufferedImage textureBI = ImageIO.read(new ByteArrayInputStream(textureBA));
+		        texture = loadTexture(textureBI);
+		        LoadedTextures.put(path, texture);//Добавляем текстуру в список
+		        } catch (IOException e) {e.printStackTrace();}    
+		    }
+	    	this.texture = texture;
+	    }
+	 
+	    
+	    static void DestorysTextures(){//вызывай её в Main движка перед Display.destory(), она очистит видеопамять от текстур перед закрытием
+	    	for(Integer textureidestory:LoadedTextures.values()){
+	    		GL11.glDeleteTextures(textureidestory);
+	    	}
+	    	LoadedTextures.clear();
 	    }
 	 
 	    private static int loadTexture(BufferedImage image){
@@ -64,5 +77,4 @@ public class Texture {
 	    public int getTexture() {
 	    	return this.texture;
 	    }
-	     
 }

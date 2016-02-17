@@ -62,8 +62,8 @@ public class GameLogic implements Game {
 		boolean up = false;
 		boolean down = false;
 		
-		camera.x = player.x;
-		camera.y = player.y;
+		camera.x = (int)player.x;
+		camera.y = (int)player.y;
 		camera.x -= Start.WIDTH/2-32;
 		camera.y -= Start.HEIGHT/2-32;
 		if(camera.x < 0 ) camera.x = 0;
@@ -71,9 +71,7 @@ public class GameLogic implements Game {
 		if(camera.y < 0 ) camera.y = 0;
 		else if(camera.y>1000-Start.HEIGHT ) camera.y = 1000-Start.HEIGHT;
 		
-		player.update(d);
-		player.collisionDetection(blocks, d);
-		
+		player.update(blocks, d);
 		
 		if(MouseEngine.isMouseButton(0)){
 			if(selectblock == 1)
@@ -102,28 +100,22 @@ public class GameLogic implements Game {
 		if(KeyboardEngine.getKeyDown(Keyboard.KEY_D)){
 			right = true;
 		}
-		if(KeyboardEngine.getKeyDown(Keyboard.KEY_S)){
-			down = true;
-		}
 		if(KeyboardEngine.getKeyDown(Keyboard.KEY_W)){
 			up = true;
 		}
 		
 		if(left) {
-			player.move(Direction.LEFT, (int) -3);
+			player.move(Direction.LEFT, (int) -80);
 		}
 		if(right) {
-			player.move(Direction.RIGHT, (int) 3);
-		}
-		if(up) {
-			player.move(Direction.UP, (int) -3);
-		}
-		if(down) {
-			player.move(Direction.DOWN, (int) 3);
+			player.move(Direction.RIGHT, (int) 80);
 		}
 		
-		if(!left && !right && !up && !down){
+		if(!left && !right){
 			player.velocity.x = 0;
+		}
+		
+		if(!up && !down && player.onground){
 			player.velocity.y = 0;
 		}
 	}
